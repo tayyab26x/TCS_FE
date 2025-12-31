@@ -1,7 +1,10 @@
 // src/components/LoginPage.jsx
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-purple-300 via-pink-200 to-yellow-200">
       <div className="bg-white p-10 rounded-lg w-full max-w-sm">
@@ -41,7 +44,13 @@ const LoginPage = () => {
         </form>
 
         <p className="text-center text-gray-500 text-sm mt-6">
-          Don't have an account? <span className="text-black font-semibold cursor-pointer">Sign Up</span>
+          Don't have an account?{" "}
+          <span
+            onClick={() => navigate("/signup")}
+            className="text-black font-semibold cursor-pointer"
+          >
+            Sign Up
+          </span>
         </p>
       </div>
     </div>

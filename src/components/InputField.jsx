@@ -1,4 +1,3 @@
-// src/components/InputField.jsx
 import React from "react";
 
 const InputField = ({ value, onChange, placeholder, type = "text" }) => {
@@ -8,7 +7,8 @@ const InputField = ({ value, onChange, placeholder, type = "text" }) => {
       value={value}
       onChange={onChange}
       placeholder={placeholder}
-      className="border rounded px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+      className="bg-transparent text-black w-full px-2 py-2 border-0 outline-none focus:ring-0 focus:border-0 placeholder-black appearance-none"
+      style={{ border: "none" }}
     />
   );
 };

@@ -6,7 +6,7 @@ import Card from "../components/Card";
 
 const Home = () => {
   const [trackingNumber, setTrackingNumber] = useState("");
-  const [shipmentData, setShipmentData] = useState([
+  const [shipmentData] = useState([
     {
       tracking_number: "TCS123456789",
       status: "In Transit",

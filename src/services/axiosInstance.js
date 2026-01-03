@@ -1,8 +1,7 @@
 import axios from "axios";
 
-// Create an Axios instance
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:8000/", // Change to your Django backend URL
+  baseURL: "http://localhost:8000", // removed trailing slash
   timeout: 5000,
   headers: {
     "Content-Type": "application/json",
@@ -10,7 +9,6 @@ const axiosInstance = axios.create({
   },
 });
 
-// Add JWT token to headers automatically
 axiosInstance.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("access_token");
@@ -22,27 +20,47 @@ axiosInstance.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Handle token refresh automatically (optional)
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    if (error.response && error.response.status === 401 && !originalRequest._retry) {
+
+    if (
+      error.response &&
+      error.response.status === 401 &&
+      !originalRequest._retry
+    ) {
       originalRequest._retry = true;
       const refreshToken = localStorage.getItem("refresh_token");
+
       if (refreshToken) {
         try {
-          const res = await axios.post("http://localhost:8000/api/token/refresh/", {
+          // Use axiosInstance to include baseURL automatically
+          const res = await axiosInstance.post("/api/token/refresh/", {
             refresh: refreshToken,
           });
+
+          // Save new access token
           localStorage.setItem("access_token", res.data.access);
-          axios.defaults.headers.common["Authorization"] = `Bearer ${res.data.access}`;
+
+          // Update Authorization header
+          axiosInstance.defaults.headers.common[
+            "Authorization"
+          ] = `Bearer ${res.data.access}`;
+          originalRequest.headers[
+            "Authorization"
+          ] = `Bearer ${res.data.access}`;
+
+          // Retry original request
           return axiosInstance(originalRequest);
         } catch (err) {
           console.error("Refresh token expired or invalid", err);
+          localStorage.removeItem("access_token");
+          localStorage.removeItem("refresh_token");
         }
       }
     }
+
     return Promise.reject(error);
   }
 );

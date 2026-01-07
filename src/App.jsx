@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 
 // Pages
@@ -20,11 +20,22 @@ function AppWrapper() {
       {!hideNavbar && <Navbar />}
       <div className={!hideNavbar ? "pt-16" : ""}>
         <Routes>
+          {/* Home page */}
           <Route path="/" element={<Home />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+
+          {/* Dashboard default redirects to admin */}
+          <Route path="/dashboard" element={<Navigate to="/dashboard/admin" />} />
+
+          {/* Dashboard role-based route */}
+          <Route path="/dashboard/:role" element={<Dashboard />} />
+
+          {/* Other pages */}
           <Route path="/create-shipment" element={<CreateShipment />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} /> {/* <-- signup route */}
+          <Route path="/signup" element={<Signup />} />
+
+          {/* Optional: catch all unknown routes */}
+          <Route path="*" element={<Navigate to="/dashboard/admin" />} />
         </Routes>
       </div>
     </>

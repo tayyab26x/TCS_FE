@@ -1,15 +1,20 @@
+// src/components/InputField.jsx
 import React from "react";
 
-const InputField = ({ value, onChange, placeholder, type = "text" }) => {
+const InputField = ({ label, value, onChange, name, placeholder, type = "text", required }) => {
   return (
-    <input
-      type={type}
-      value={value}
-      onChange={onChange}
-      placeholder={placeholder}
-      className="bg-transparent text-black w-full px-2 py-2 border-0 outline-none focus:ring-0 focus:border-0 placeholder-black appearance-none"
-      style={{ border: "none" }}
-    />
+    <div className="mb-4">
+      {label && <label className="block mb-1 font-medium text-gray-700">{label}</label>}
+      <input
+        type={type}
+        name={name}
+        value={value}        // ✅ important
+        onChange={onChange}  // ✅ important
+        placeholder={placeholder}
+        required={required}
+        className="border p-2 rounded w-full"
+      />
+    </div>
   );
 };
 
